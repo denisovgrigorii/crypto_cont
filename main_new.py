@@ -1,20 +1,25 @@
 from interface_action import InterfaceAction
 from crypto import ActionCrypto
 from action_with_files import ActionWithFile
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from getpass import getpass
 from base64 import urlsafe_b64decode
 from json import dumps
 
 
-def init_args():
+def init_args() -> Namespace:
+    """Startup arguments initialization.
+        Returns:
+            Namespace: class object.
+    """
     parser = ArgumentParser()
     parser.add_argument('file_dir', type=str, help='directory file')
     parser.add_argument('action', type=str, help='action do it ')
     return parser.parse_args()
 
 
-def main_start(args, input_pwd):
+def main_start(args: Namespace, input_pwd: str) -> None:
+    """Main logic of the utility."""
     data = ActionWithFile.read_crypto_file(args.file_dir)
     salt = ActionWithFile.read_crypto_file('key')
     crypto = ActionCrypto()
@@ -23,7 +28,7 @@ def main_start(args, input_pwd):
     if args.action == 'create':
         print('step create')
         cred_name = InterfaceAction.input_cred_name(args.action)
-        cred_passwd = InterfaceAction.input_cred_passwd()
+        cred_passwd = InterfaceAction.input_passwd('create')
         print(f'Вы создаете секрет с name={cred_name}, pwd={cred_passwd}')
         response_save = InterfaceAction.confirm_create_secret()
         print(response_save)
@@ -46,5 +51,5 @@ def main_start(args, input_pwd):
 
 if __name__ == '__main__':
     args = init_args()
-    input_password = getpass('Введите пароль: ')
+    input_password = InterfaceAction.input_passwd('start')
     main_start(args, input_password)

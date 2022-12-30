@@ -12,8 +12,7 @@ class InvalidPwdError(Exception):
 
 
 class ActionCrypto:
-    @staticmethod
-    def create_crypto_key(salt, password_str):
+    def create_crypto_key(self, salt, password_str):
         kdf = PBKDF2HMAC(algorithm=hashes.SHA256(),
                          length=32,
                          salt=salt,

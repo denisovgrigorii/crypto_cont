@@ -12,7 +12,14 @@ class InvalidPwdError(Exception):
 
 
 class ActionCrypto:
-    def create_crypto_key(self, salt, password_str):
+    def create_crypto_key(self, salt, password_str) -> str:
+        """Create sha256 key for crypt.
+        Args:
+            salt(str): salt for create sha256 kdf.
+            password_str(str): password for create key.
+        Returns:
+            str: Key for create crypto data.
+        """
         kdf = PBKDF2HMAC(algorithm=hashes.SHA256(),
                          length=32,
                          salt=salt,
